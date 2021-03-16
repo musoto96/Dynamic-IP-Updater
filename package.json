@@ -1,0 +1,22 @@
+{
+  "name": "dynamic-ip-updater",
+  "version": "1.0.0",
+  "description": "noip ip updater with metrics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/musoto96/Dynamic-IP-Updater.git"
+  },
+  "author": "Moisés Soto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/musoto96/Dynamic-IP-Updater/issues"
+  },
+  "homepage": "https://github.com/musoto96/Dynamic-IP-Updater#readme",
+  "dependencies": {
+    "puppeteer": "^8.0.0"
+  }
+}
