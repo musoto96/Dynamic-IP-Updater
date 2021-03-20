@@ -6,6 +6,11 @@ then
   exit
 fi
 
+if [ ! -e ipCheck.sh ]
+then
+  echo "Installation must run from Dynamic-IP-Updater directory. Exiting"
+fi
+
 echo "Checking if a service exists under the name ipCheck.service"
 if [ -e /etc/systemd/system/ipCheck.service ]
 then

@@ -3,11 +3,13 @@ FROM ubuntu
 WORKDIR /app
 
 ADD bootstrap.sh .
-ADD package.json .
 
 RUN chmod +x bootstrap.sh
 RUN ./bootstrap.sh
 
-COPY index.js .
+ADD package.json .
+RUN npm install
 
-CMD [ "node", "index.js" ]
+COPY ipupdt.js .
+
+CMD [ "node", "ipupdt.js" ]

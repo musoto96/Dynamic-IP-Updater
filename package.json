@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/musoto96/Dynamic-IP-Updater#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "puppeteer": "^8.0.0"
   }
 }
