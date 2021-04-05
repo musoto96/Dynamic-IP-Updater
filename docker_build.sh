@@ -1,5 +1,28 @@
 #!/usr/bin/bash
 
+# 
+#  Quick and dirty utility for building, pruning and runing
+# ipupdt docker image for debugging in text based environments.
+# 
+#  Usage:
+# To use first comment out the line 
+#      await browser.close();
+# and uncomment the next one
+#      await page.screenshot({path: 'ss.png'});
+# in ipupdt.js
+# 
+#   Description:
+#  The script builds a new image, prunes the old one, runs 
+#  the new one, takes a screenshot and copies it over from 
+#  the docker container into the host machine, stopping the 
+#  container afterwards.
+# 
+# 
+#     ~Moisés Uriel Soto Pedrero.
+#       github.com/musoto96
+# 
+
+
 echo "Building new image"
 docker build -t musoto96/ipupdt:1.0 ./
 

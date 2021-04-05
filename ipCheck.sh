@@ -1,23 +1,40 @@
 #!/usr/bin/bash
 
+# Docker container name (change to desired name)
+DOCKER_CN=musoto96/ipupdt:1.0
+
 # Check for previous known ip
-if [ -e ip.txt ]
+TEMPFILE=/tmp/ipCheck-daemon-ip
+if [ -e "$TEMPFILE" ]
 then
-  source ip.txt
-  echo $PREV_PUB_IP
+  echo "$TEMPFILE found sourcing now"
+  cat $TEMPFILE
+  source $TEMPFILE
+else
+  PREV_PUB_IP=$(curl -s https://ipinfo.io/ip)
+  echo "PREV_PUB_IP=$PREV_PUB_IP" > $TEMPFILE
+  sleep 180
 fi
 
 # Service 
 while [ true ]
 do
+  source $TEMPFILE
   PUB_IP=$(curl -s https://ipinfo.io/ip)
-  echo $PUB_IP
 
   if [ "$PREV_PUB_IP" != "$PUB_IP" ]
   then
-    echo "IP Changed, run program"
-    echo "PREV_PUB_IP=$PUB_IP" > ip.txt
-    PREV_PUB_IP=$PUB_IP
+    echo "IP Changed, updating"
+    docker run --rm $DOCKER_CN node ipupdt $PUB_IP
+    RES=$?
+    
+    if [ "$RES"==0 ]
+    then
+      echo "IP update success"
+      echo "PREV_PUB_IP=$PUB_IP" > $TEMPFILE
+    else
+      echo "Error in docker: $DOCKER_CN"
+    fi
   fi
 
   # rate limit 50000/month, approx 1/minute

@@ -11,5 +11,6 @@ ADD package.json .
 RUN npm install
 
 COPY ipupdt.js .
+COPY .env .
 
 CMD [ "node", "ipupdt.js" ]
