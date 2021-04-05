@@ -6,7 +6,7 @@
 1. Docker
 2. NodeJS
 
-## Instalation
+## Installation
 __All commands are run on the Dynamic-IP-Updater directory__
 1. Install npm packages <br/>
 `npm install`
