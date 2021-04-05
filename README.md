@@ -15,7 +15,7 @@ __All commands are run on the Dynamic-IP-Updater directory__
 4. Build docker image using Dockerfile <br/>
 `docker build -t ipupdt ./`
 5. Install daemon and start the service<br/>
-`echo "y" | chmod 744 install.sh && sudo ./install.sh`
+`chmod 744 install.sh && echo "y" | sudo ./install.sh`
 
 ### Useful commands
 1. You can monitor the daemon state with <br/>
