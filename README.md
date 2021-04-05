@@ -10,9 +10,10 @@ __All commands are run on the Dynamic-IP-Updater directory__
 1. Install npm packages <br/>
 `npm install`
 2. Modify `.env` with your credentials.
-3. Build docker image using Dockerfile <br/>
+3. Open `ipupdt.js` with a text editor and search for `SETUP BEGIN` and update the link accordingly.
+4. Build docker image using Dockerfile <br/>
 `docker build -t ipupdt ./`
-4. Install daemon <br/>
+5. Install daemon <br/>
 `echo "y" | chmod 744 install.sh && sudo ./install.sh`
 
 ## Useful commands

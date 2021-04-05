@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # Docker container name (change to desired name)
-DOCKER_CN=musoto96/ipupdt:1.0
+DOCKER_CN=ipupdt:latest
 
 # Check for previous known ip
 TEMPFILE=/tmp/ipCheck-daemon-ip

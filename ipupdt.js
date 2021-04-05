@@ -31,7 +31,13 @@ async function updateIP(newIP) {
   //page.waitForSelector(".stat-panel", {visible=true})
 
   await page.waitForTimeout(10000)
+
+  // SETUP START
+  // Update this link with your DNS Records "Update host" panel link
+  //  the screen where you enter an IP to update your hostname.
   await page.goto('https://www.noip.com/members/dns/host.php?host_id=77409448');
+  // SETUP END
+  
   await page.waitForTimeout(10000)
 
   await page.evaluate((newIP) => {
