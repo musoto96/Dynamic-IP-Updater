@@ -22,19 +22,24 @@ do
   source $TEMPFILE
   PUB_IP=$(curl -s https://ipinfo.io/ip)
 
-  if [ "$PREV_PUB_IP" != "$PUB_IP" ]
+  if [ "$?" != 6 ]
   then
-    echo "IP Changed, updating"
-    docker run --rm $DOCKER_CN node ipupdt $PUB_IP
-    RES=$?
-    
-    if [ "$RES"==0 ]
+    if [ "$PREV_PUB_IP" != "$PUB_IP" ]
     then
-      echo "IP update success"
-      echo "PREV_PUB_IP=$PUB_IP" > $TEMPFILE
-    else
-      echo "Error in docker: $DOCKER_CN"
+      echo "IP Changed, updating"
+      docker run --rm $DOCKER_CN node ipupdt $PUB_IP
+      RES=$?
+      
+      if [ "$RES"==0 ]
+      then
+        echo "IP update success"
+        echo "PREV_PUB_IP=$PUB_IP" > $TEMPFILE
+      else
+        echo "Error in docker: $DOCKER_CN"
+      fi
     fi
+  else
+    echo "Awaiting for connection"
   fi
 
   # rate limit 50000/month, approx 1/minute
