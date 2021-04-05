@@ -53,6 +53,4 @@ async function updateIP(newIP) {
   await browser.close();
 };
 
-
-const ip = process.argv[2] || "0.0.0.0";
-updateIP(ip);
+updateIP(process.argv[2]);
