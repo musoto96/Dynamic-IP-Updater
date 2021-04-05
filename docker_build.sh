@@ -24,7 +24,7 @@
 
 
 echo "Building new image"
-docker build -t musoto96/ipupdt:1.0 ./
+docker build -t ipupdt:latest ./
 
 echo "Pruning old images"
 echo "y" | docker image prune
