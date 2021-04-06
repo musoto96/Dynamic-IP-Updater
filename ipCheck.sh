@@ -39,7 +39,7 @@ do
       fi
     fi
   else
-    echo "Awaiting for connection"
+    echo "Awaiting connection"
   fi
 
   # rate limit 50000/month, approx 1/minute
