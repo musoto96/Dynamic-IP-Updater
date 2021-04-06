@@ -20,8 +20,16 @@ fi
 
 echo "Creating service under the name ipCheck.service"
 cat <<EOF > /etc/systemd/system/ipCheck.service
+[Unit]
+Description=IP monitoring and updating for noip.com personal hostnames
+After=network.target
+
 [Service]
 ExecStart=$PWD/ipCheck.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
 EOF
 
 echo "Do you want to start the service now?"
