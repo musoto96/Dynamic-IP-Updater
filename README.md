@@ -18,7 +18,7 @@ __All commands are run on the Dynamic-IP-Updater directory__
 `chmod 744 install.sh && echo "y" | sudo ./install.sh`
 
 ### Useful commands
-1. You can monitor the daemon state with <br/>
+1. You can view service state with <br/>
 `sudo systemctl status ipCheck.service`
-2. Or view trailing logs on the service status <br/>
+2. Or view trailing logs on the service with <br/>
 `sudo journalctl -u ipCheck.service -f`
