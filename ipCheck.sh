@@ -1,7 +1,10 @@
 #!/usr/bin/bash
 
-# Docker container name (change to desired name)
+# Docker container name
 DOCKER_CN=ipupdt:latest
+
+# Docker container config
+DOCKER_CFG=/home/moises/.docker
 
 # Check for previous known ip
 TEMPFILE=/tmp/ipCheck-daemon-ip
@@ -27,7 +30,7 @@ do
     if [ "$PREV_PUB_IP" != "$PUB_IP" ]
     then
       echo "IP Changed, updating"
-      docker run --rm $DOCKER_CN node ipupdt $PUB_IP
+      docker --config $DOCKER_CFG run --rm $DOCKER_CN node ipupdt $PUB_IP
       RES=$?
       
       if [ "$RES"==0 ]
