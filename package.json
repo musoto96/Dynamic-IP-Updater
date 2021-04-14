@@ -11,7 +11,7 @@
     "url": "git+https://github.com/musoto96/Dynamic-IP-Updater.git"
   },
   "author": "Moisés Soto",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/musoto96/Dynamic-IP-Updater/issues"
   },
