@@ -14,7 +14,7 @@ then
   cat $TEMPFILE
   source $TEMPFILE
 else
-  PREV_PUB_IP=$(curl -s https://ipinfo.io/ip)
+  PREV_PUB_IP=$(curl -fs https://ipinfo.io/ip)
   echo "PREV_PUB_IP=$PREV_PUB_IP" > $TEMPFILE
   sleep 180
 fi
@@ -23,9 +23,9 @@ fi
 while [ true ]
 do
   source $TEMPFILE
-  PUB_IP=$(curl -s https://ipinfo.io/ip)
+  PUB_IP=$(curl -fs https://ipinfo.io/ip)
 
-  if [ "$?" != 6 ]
+  if [ "$?" != 22 ]
   then
     if [ "$PREV_PUB_IP" != "$PUB_IP" ]
     then
