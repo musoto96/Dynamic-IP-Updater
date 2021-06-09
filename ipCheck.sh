@@ -30,7 +30,7 @@ do
     if [ "$PREV_PUB_IP" != "$PUB_IP" ]
     then
       echo "IP Changed, updating"
-      docker --config $DOCKER_CFG run --rm $DOCKER_CN node ipupdt $PUB_IP
+      docker --config $DOCKER_CFG run --rm $DOCKER_CN node ipupdt.js $PUB_IP
       RES=$?
       
       if [ "$RES"==0 ]
