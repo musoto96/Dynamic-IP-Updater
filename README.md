@@ -1,5 +1,6 @@
 # Dynamic-IP-Updater
 
+### Not working, need proper error handling
 ### Currently supporting only noip personal hostnames
 
 ## Requirements
