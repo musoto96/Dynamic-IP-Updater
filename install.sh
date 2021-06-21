@@ -22,7 +22,6 @@ echo "Creating service under the name ipCheck.service"
 cat <<EOF > /etc/systemd/system/ipCheck.service
 [Unit]
 Description=IP monitoring and updating for noip.com personal hostnames
-After=docker.service
 
 [Service]
 ExecStart=$PWD/ipCheck.sh

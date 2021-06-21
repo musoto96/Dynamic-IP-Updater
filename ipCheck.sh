@@ -1,45 +1,58 @@
 #!/usr/bin/bash
 
-# Docker container name
-DOCKER_CN=ipupdt:latest
+# Credentials
+source .credentials
+HEADERS="Authorization: sso-key $KEY:$SECRET"
 
-# Docker container config
-DOCKER_CFG=/home/moises/.docker
+# Vars
+DOMAIN="domain.com"
+NAME="@"
+TYPE="A"
+TTL="3600"
+PORT="1"
+WEIGHT="1"
 
 # Check for previous known ip
-TEMPFILE=/tmp/ipCheck-daemon-ip
-if [ -e "$TEMPFILE" ]
-then
-  echo "$TEMPFILE found sourcing now"
-  cat $TEMPFILE
-  source $TEMPFILE
-else
-  PREV_PUB_IP=$(curl -fs https://ipinfo.io/ip)
-  echo "PREV_PUB_IP=$PREV_PUB_IP" > $TEMPFILE
-  sleep 180
-fi
-
 # Service 
 while [ true ]
 do
-  source $TEMPFILE
-  PUB_IP=$(curl -fs https://ipinfo.io/ip)
+  PUB_IP=$(curl -fsX GET https://ipinfo.io/ip)
+  echo "PUB_IP=$PUB_IP"
+
+  RECORD_DATA=$(curl -sfX GET "https://api.godaddy.com/v1/domains/${DOMAIN}/records/${TYPE}/${NAME}" -H "${HEADERS}")
+  RECORD_DATA=$(echo $RECORD_DATA | cut -d : -f 2 | cut -d , -f 1)
+
+  DOMAIN_PUB_IP=$(echo $RECORD_DATA | sed -r 's/\"//g')
+
+  echo "DOMAIN_PUB_IP=$DOMAIN_PUB_IP"
 
   if [ "$?" != 22 ]
   then
-    if [ "$PREV_PUB_IP" != "$PUB_IP" ]
+    if [ "$PUB_IP" != "$DOMAIN_PUB_IP" ]
     then
       echo "IP Changed, updating"
-      docker --config $DOCKER_CFG run --rm $DOCKER_CN node ipupdt.js $PUB_IP
+      curl -X PUT "https://api.godaddy.com/v1/domains/${DOMAIN}/records/${TYPE}/${NAME}" \
+        -H "accept: application/json" \
+        -H "Content-Type: application/json" \
+        -H "${HEADERS}" \
+        -d "[ { \"data\": \"${PUB_IP}\", 
+              \"port\": ${PORT}, 
+              \"priority\": 0, 
+              \"protocol\": \"string\", 
+              \"service\": \"string\", 
+              \"ttl\": $TTL, 
+              \"weight\": $WEIGHT } ]"
       RES=$?
-      
+
       if [ "$RES"==0 ]
       then
         echo "IP update success"
-        echo "PREV_PUB_IP=$PUB_IP" > $TEMPFILE
+        echo "$DOMAIN pointing to $PUB_IP"
       else
-        echo "Error in docker: $DOCKER_CN"
+        echo "Error updating."
       fi
+    else
+      echo "IP Unchanged"
     fi
   else
     echo "Awaiting connection"
