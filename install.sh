@@ -9,6 +9,13 @@ fi
 if [ ! -e ipCheck.sh ]
 then
   echo "Installation must run from Dynamic-IP-Updater directory. Exiting"
+  exit
+fi
+
+if [ ! -e .credentials ]
+then
+  echo "File .credentials not found. Exiting"
+  exit
 fi
 
 echo "Checking if a service exists under the name ipCheck.service"
@@ -24,6 +31,7 @@ cat <<EOF > /etc/systemd/system/ipCheck.service
 Description=IP monitoring and updating for noip.com personal hostnames
 
 [Service]
+EnvironmentFile=$PWD/.credentials
 ExecStart=$PWD/ipCheck.sh
 Restart=always
 

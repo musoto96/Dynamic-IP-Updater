@@ -1,11 +1,10 @@
 #!/usr/bin/bash
 
 # Credentials
-source .credentials
 HEADERS="Authorization: sso-key $KEY:$SECRET"
 
 # Vars
-DOMAIN="domain.com"
+DOMAIN="domain-mx.com"
 NAME="@"
 TYPE="A"
 TTL="3600"
