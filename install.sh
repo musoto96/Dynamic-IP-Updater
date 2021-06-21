@@ -28,7 +28,7 @@ fi
 echo "Creating service under the name ipCheck.service"
 cat <<EOF > /etc/systemd/system/ipCheck.service
 [Unit]
-Description=IP monitoring and updating for noip.com personal hostnames
+Description=IP monitoring and updating for GoDaddy domain records
 
 [Service]
 EnvironmentFile=$PWD/.credentials
@@ -38,6 +38,9 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+
+echo "Enabling service."
+systemctl enable ipCheck.service
 
 echo "Do you want to start the service now?"
 read -p "" START

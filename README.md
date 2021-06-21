@@ -1,6 +1,6 @@
 # Dynamic-IP-Updater
 
-### Godaddy dns ip updater daemon
+### GoDaddy dns ip updater daemon
 
 ## Installation
 __All commands are run on the Dynamic-IP-Updater directory__
