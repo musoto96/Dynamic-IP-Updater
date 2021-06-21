@@ -4,7 +4,7 @@
 HEADERS="Authorization: sso-key $KEY:$SECRET"
 
 # Vars
-DOMAIN="domain-mx.com"
+DOMAIN="domain.com"
 NAME="@"
 TYPE="A"
 TTL="3600"
@@ -16,6 +16,7 @@ WEIGHT="1"
 while [ true ]
 do
   PUB_IP=$(curl -fsX GET https://ipinfo.io/ip)
+  REQ=$?
   echo "PUB_IP=$PUB_IP"
 
   RECORD_DATA=$(curl -sfX GET "https://api.godaddy.com/v1/domains/${DOMAIN}/records/${TYPE}/${NAME}" -H "${HEADERS}")
@@ -25,7 +26,7 @@ do
 
   echo "DOMAIN_PUB_IP=$DOMAIN_PUB_IP"
 
-  if [ "$?" != 22 ]
+  if [ "$REQ" != 22 ]
   then
     if [ "$PUB_IP" != "$DOMAIN_PUB_IP" ]
     then
