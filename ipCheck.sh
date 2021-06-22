@@ -16,17 +16,20 @@ WEIGHT="1"
 while [ true ]
 do
   PUB_IP=$(curl -fsX GET https://ipinfo.io/ip)
-  REQ=$?
+  EXIT_PUB_IP=$?
+
   echo "PUB_IP=$PUB_IP"
 
   RECORD_DATA=$(curl -sfX GET "https://api.godaddy.com/v1/domains/${DOMAIN}/records/${TYPE}/${NAME}" -H "${HEADERS}")
+  EXIT_RECORD_DATA=$?
+
   RECORD_DATA=$(echo $RECORD_DATA | cut -d : -f 2 | cut -d , -f 1)
 
   DOMAIN_PUB_IP=$(echo $RECORD_DATA | sed -r 's/\"//g')
 
   echo "DOMAIN_PUB_IP=$DOMAIN_PUB_IP"
 
-  if [ "$REQ" != 22 ]
+  if [ "$EXIT_PUB_IP" == 0 ] && [ "$EXIT_RECORD_DATA" == 0 ]
   then
     if [ "$PUB_IP" != "$DOMAIN_PUB_IP" ]
     then
