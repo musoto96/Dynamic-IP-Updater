@@ -4,12 +4,7 @@
 HEADERS="Authorization: sso-key $KEY:$SECRET"
 
 # Vars
-DOMAIN="domain.com"
-NAME="@"
-TYPE="A"
-TTL="3600"
-PORT="1"
-WEIGHT="1"
+source /etc/ipCheck/config.conf
 
 # Check for previous known ip
 # Service 
