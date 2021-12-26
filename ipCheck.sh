@@ -53,7 +53,7 @@ do
       echo "IP Unchanged"
     fi
   else
-    echo "Awaiting connection"
+    echo "Awaiting conection"
   fi
 
   # rate limit 50000/month, approx 1/minute
