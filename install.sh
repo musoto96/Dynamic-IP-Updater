@@ -44,7 +44,6 @@ GenerateConfig()
         <config.conf
         ;;
       *)
-        echo "You can start the service with the following command \"systemctl start ipCheck.service\""
     esac
   fi
 
