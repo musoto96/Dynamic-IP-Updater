@@ -44,6 +44,8 @@ GenerateConfig()
         <config.conf
         ;;
       *)
+        echo "Exiting"
+        exit;;
     esac
   fi
 
