@@ -7,4 +7,15 @@ then
 fi
 
 echo "Uninstalling Dynamic IP Updater"
-sudo systemctl stop ipCheck.service && sudo rm /etc/systemd/system/ipCheck.service && echo "Succesfully uninstalled Dynamic IP Updater." && exit
+
+echo "Stopping service"
+systemctl stop ipCheck.service
+
+echo "Removing service"
+rm /etc/systemd/system/ipCheck.service
+
+echo "Reloading daemons"
+systemctl daemon-reload
+
+echo "Succesfully uninstalled Dynamic IP Updater."
+exit

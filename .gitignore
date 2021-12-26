@@ -3,3 +3,7 @@ node_modules
 *~
 *.swp
 *.png
+*.conf
+*.bak
+*.conf
+*.bak
