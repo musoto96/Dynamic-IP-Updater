@@ -3,7 +3,6 @@
 Help()
 {
 echo
-echo
 echo "Dynamic IP Updater, version 1.0"
 echo "Usage:	install [option]|[long option]"
 echo
@@ -20,7 +19,6 @@ echo
 
 Licence()
 {
-  echo
   echo
   echo "MIT License"
   echo
