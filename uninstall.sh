@@ -1,4 +1,6 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+
+source ./install.conf
 
 if [ "$EUID" -ne 0 ]
 then
@@ -6,16 +8,16 @@ then
   exit
 fi
 
-echo "Uninstalling Dynamic IP Updater"
+echo "Uninstalling $PROGRAM"
 
 echo "Stopping service"
-systemctl stop ipCheck.service
+systemctl stop $DAEMON.service
 
 echo "Removing service"
-rm /etc/systemd/system/ipCheck.service
+rm /etc/systemd/system/$DAEMON.service
 
 echo "Reloading daemons"
 systemctl daemon-reload
 
-echo "Succesfully uninstalled Dynamic IP Updater."
+echo "Succesfully uninstalled $PROGRAM."
 exit

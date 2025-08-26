@@ -1,47 +1,33 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+
+source ./install.conf
 
 Help()
 {
 echo
-echo "Dynamic IP Updater, version 1.0"
-echo "Usage:	install [option]|[long option]"
+echo "$PROGRAM, $VERSION"
+echo "Usage:  install [option]|[long option]"
 echo
 echo "Options:"
-echo "  -i,  --install                 Install Dynamic IP Updater"
+echo "  -i,  --install                 Install $PROGRAM"
 echo "  -g,  --generate-config         Generates config file in current directory"
 echo "  -h,  --help                    Prints help and info"
-echo "  -l,  --licence                 Prints MIT licence"
+echo "  -l,  --licence                 Prints licence if any"
 echo
-echo "Home page: https://github.com/musoto96/Dynamic-IP-Updater"
+echo "Home page: https://github.com/musoto96/$REPONAME"
 echo
 echo
-}
-
-Licence()
-{
-  echo
-  echo "MIT License"
-  echo
-  echo "Copyright (c) 2021, Moises Uriel Soto Pedrero"
-  echo
-  echo "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:"
-  echo
-  echo "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software."
-  echo
-  echo "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-  echo
-  echo
 }
 
 GenerateConfig()
 {
-  if [ -f ./config.conf ]
+  if [ -f ./$CONF ]
   then
-    echo "Do you wish to overwrite config.conf in current directory?"
+    echo "Do you wish to overwrite $CONF in current directory?"
     read -p "" ANS
     case "$ANS" in 
       [Yy] | [Yy][Ee][Ss])
-        <config.conf
+        <$CONF
         ;;
       *)
         echo "Exiting"
@@ -49,30 +35,33 @@ GenerateConfig()
     esac
   fi
 
-  echo "Creating config file in config.conf."
-  cat <<EOF 1> ./config.conf
+  echo "Creating config file: $CONF."
+  cat <<EOF 1> ./$CONF
 #!/usr/bin/bash
 
-RECORD1=(
-  DOMAIN="example.com"
-  NAME="@"
-  TYPE="A"
-  TTL="600"
-  PORT="1"
-  WEIGHT="1"
-)
+# Registrar "godaddy" or "namedotcom" including doublequotes
+REGISTRAR="namedotcom"
+PUBLIC_IP_ENDPOINT_CHECK="https://ipinfo.io/ip"
 
-# TODO: Support for multiple records
-RECORDS=(\${RECORD1[@]})
+# Log level
+DEBUG="false"
 
-for rec in \${RECORDS[@]}
-do
-  echo \$rec
-  declare \$rec
-done
+# name.com endpoint
+NAMEDOTCOM_ENDPOINT="https://api.name.com/core/v1/domains"
+
+# Godaddy endpoint
+GODADDY_ENDPOINT="https://api.godaddy.com/v1/domains"
+
+# Record to monitor
+DOMAIN="example.com"
+NAME="@"
+TYPE="A"
+TTL="600"
+PORT="1"
+WEIGHT="1"
 EOF
 
-  echo "Edit config.conf with the domain to check and run installer."
+  echo "Edit $CONF with appropriate paths on your system."
 }
 
 Install()
@@ -83,68 +72,75 @@ Install()
     exit
   fi
 
-  if [ ! -f ipCheck.sh ]
+  if [ ! -f $SCRIPT ]
   then
-    echo "Installation must run from Dynamic-IP-Updater directory. Exiting"
+    echo "Installation must run from $DAEMON directory. Exiting"
     exit
   fi
 
-  if [ ! -f .credentials ]
+  if [ ! -d $ETC ]
   then
-    echo "File .credentials not found. Exiting"
-    exit
+    mkdir $ETC
   fi
 
-  if [ ! -d /etc/ipCheck ]
-  then
-    mkdir /etc/ipCheck
-  fi
-
-  echo "Checking config.conf file"
-  if [ ! -f ./config.conf ]
+  echo "Checking $CONF file"
+  if [ ! -f ./$CONF ]
   then
     echo "Configuration file missing, creating new one."
     GenerateConfig
-    chmod 666 ./config.conf
+    chmod 666 ./$CONF
   exit
   else
-    cp ./config.conf /etc/ipCheck/
+    cp ./$CONF $ETC/
   fi
 
-  echo "Checking if a service exists under the name ipCheck.service"
-  if [ -e /etc/systemd/system/ipCheck.service ]
+  echo "Checking $CREDENTIALS file"
+  if [ ! -f ./$CREDENTIALS ]
   then
-    echo "Service with name ipCheck.service already exists."
+    echo "Credentials file missing: $CREDENTIALS"
+  exit
+  else
+    cp ./$CREDENTIALS $ETC/
+  fi
+
+  echo "Copying program"
+  cp ./$SCRIPT $ETC/
+
+  echo "Checking if a service exists under the name $DAEMON.service"
+  if [ -e /etc/systemd/system/$DAEMON.service ]
+  then
+    echo "Service with name $DAEMON.service already exists."
     echo "Run uninstall script to clean previous installations."
     echo "Exiting."
     exit
   fi
 
-  echo "Creating service under the name ipCheck.service"
-  cat <<EOF 1> /etc/systemd/system/ipCheck.service
+  echo "Creating service under the name $DAEMON.service"
+  cat <<EOF 1> /etc/systemd/system/$DAEMON.service
 [Unit]
-Description=IP monitoring and updating for GoDaddy domain records
+Description=$DESCRIPTION
 
 [Service]
-EnvironmentFile=$PWD/.credentials
-ExecStart=$PWD/ipCheck.sh
+EnvironmentFile=$ETC/$CONF
+ExecStart=$ETC/$SCRIPT
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
+
   echo "Enabling service."
-  systemctl enable ipCheck.service
+  systemctl enable $DAEMON.service
 
   echo "Do you want to start the service now?"
   read -p "" START
   case "$START" in 
     [Yy] | [Yy][Ee][Ss])
-      systemctl start ipCheck.service
+      systemctl start $DAEMON.service
       ;;
     *)
-      echo "You can start the service with the following command \"systemctl start ipCheck.service\""
+      echo "You can start the service with the following command \"systemctl start $DAEMON.service\""
   esac
   echo "Installation complete"
 }
@@ -177,4 +173,3 @@ if [ $OPTIND == 1 ]
 then
   Install
 fi
-###
